@@ -32,17 +32,16 @@ response: ChatResponse = chat(
 
 
 for chunk in response:
-    # Печатаем обычный текст от модели
     if chunk.message.content:
         print(chunk.message.content, end='', flush=True)
 
-    # Обрабатываем tool_calls
     if chunk.message.tool_calls:
         for call in chunk.message.tool_calls:
-            tool_name = call.get("name")
-            args = call.get("args", {})
-            print(f"\n Модель хочет вызвать {tool_name}({args})")
+            func_name = call.function.name
+            args = call.function.arguments
+            print(f"\n Модель хочет вызвать {func_name}({args})")
 
-            if tool_name in TOOLS:
-                result = TOOLS[tool_name](**args)
-                print(f" Результат вызова: {result}")
+            # Вызов функции напрямую
+            if func_name == "add_two_numbers":
+                result = add_two_numbers(**args)
+                print(f"\n Результат вызова: {result}")
