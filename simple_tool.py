@@ -1,7 +1,5 @@
 from ollama import chat, ChatResponse 
 
-
-# Define the python function
 def add_two_numbers(a: int, b: int) -> int:
     """
     Суммирует два числа и возвращает результат
@@ -39,9 +37,8 @@ for chunk in response:
         for call in chunk.message.tool_calls:
             func_name = call.function.name
             args = call.function.arguments
-            print(f"\n Модель хочет вызвать {func_name}({args})")
+            print(f"\n🔧 Модель хочет вызвать {func_name}({args})")
 
             # Вызов функции напрямую
-            if func_name == "add_two_numbers":
-                result = add_two_numbers(**args)
-                print(f"\n Результат вызова: {result}")
+            if func_name:
+                print(TOOLS.get(func_name)(**args))
